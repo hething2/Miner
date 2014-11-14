@@ -17,15 +17,15 @@ public class GameRunner implements Runnable {
 		try {
 			JSONInputStream in = new JSONInputStream(this.mSocket.getInputStream());
 			JSONOutputStream out = new JSONOutputStream(this.mSocket.getOutputStream());
-			CommandBean command = null;
+			String type = null;
 			do {
 				HashMap<String, Object> input = (HashMap<String, Object>) in.readObject();
-				CommandBean command = ApplicationController.getInstance().handle(input);
-				if (command != null) {
-					out.writeObject(command);
+				type = input.get("type");
+				if( input != null) {
+					ApplicationController.getInstance().handle(type, input);
 				}
 			}
-			while(command == null || !command.getType().equals("End"));
+			while(input != null && !input.equals("End"));
 		} catch(Exception e) {
 			
 		} finally {
